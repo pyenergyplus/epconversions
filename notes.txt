@@ -1,0 +1,6 @@
+2023-10-28
+==========
+
+python3 -m venv ~/venvs/epconversions
+source ~/venvs/epconversions/bin/activate
+
