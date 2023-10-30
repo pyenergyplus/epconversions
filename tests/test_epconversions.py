@@ -789,10 +789,16 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
 ! Units fields that are not translated
 ! **************************************************************************
 """,
-({'m/s': {'ft/min': 196.850393700787, 'miles/hr': 2.2369362920544}},
- {'ft/min': {'m/s': 196.850393700787}, 'miles/hr': {'m/s': 2.2369362920544}},
- {'m/s': 'ft/min'},
- {'ft/min': 'm/s', 'miles/hr': 'm/s'})        ),  # txt, expected
+            (
+                {"m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544}},
+                {
+                    "ft/min": {"m/s": 196.850393700787},
+                    "miles/hr": {"m/s": 2.2369362920544},
+                },
+                {"m/s": "ft/min"},
+                {"ft/min": "m/s", "miles/hr": "m/s"},
+            ),
+        ),  # txt, expected
         (
             """! Default IP conversions (no ip-units necessary)
 !      m                      =>   ft                  3.28083989501312
@@ -807,16 +813,29 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
 !      ppm
 ! **************************************************************************
 """,
-({'m': {'ft': 3.28083989501312, 'in': 39.3700787401575},
-  'm/s': {'ft/min': 196.850393700787, 'miles/hr': 2.2369362920544},
-  'ppm': {'ppm': None}},
- {'ft': {'m': 3.28083989501312},
-  'ft/min': {'m/s': 196.850393700787},
-  'miles/hr': {'m/s': 2.2369362920544},
-  'in': {'m': 39.3700787401575},
-  'ppm': {'ppm': None}},
- {'m': 'ft', 'm/s': 'ft/min', 'ppm': 'ppm'},
- {'ft': 'm', 'ft/min': 'm/s', 'miles/hr': 'm/s', 'in': 'm', 'ppm': 'ppm'})        ),  # txt, expected
+            (
+                {
+                    "m": {"ft": 3.28083989501312, "in": 39.3700787401575},
+                    "m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544},
+                    "ppm": {"ppm": None},
+                },
+                {
+                    "ft": {"m": 3.28083989501312},
+                    "ft/min": {"m/s": 196.850393700787},
+                    "miles/hr": {"m/s": 2.2369362920544},
+                    "in": {"m": 39.3700787401575},
+                    "ppm": {"ppm": None},
+                },
+                {"m": "ft", "m/s": "ft/min", "ppm": "ppm"},
+                {
+                    "ft": "m",
+                    "ft/min": "m/s",
+                    "miles/hr": "m/s",
+                    "in": "m",
+                    "ppm": "ppm",
+                },
+            ),
+        ),  # txt, expected
     ],
 )
 def test_getconversions(txt, expected):

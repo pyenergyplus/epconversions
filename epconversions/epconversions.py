@@ -882,9 +882,9 @@ def convert2si(
         conv = 1.0
     elif not siunits:
         default = IP_DEFAULT[ipunits]
-        conv = IP[ipunits][default] 
+        conv = IP[ipunits][default]
     else:
-        conv = IP[ipunits][siunits] 
+        conv = IP[ipunits][siunits]
 
     # do conversion
     new_val = doconversion(val, conv, reverse=True)
@@ -922,7 +922,7 @@ def doconversion(
 ) -> float:
     if reverse:
         try:
-            conv = 1 / conv# type: ignore
+            conv = 1 / conv  # type: ignore
         except TypeError as e:
             pass
     try:
@@ -932,7 +932,7 @@ def doconversion(
             else:
                 new_val = (val * 1.8) + 32
         else:
-            new_val = val * conv # type: ignore
+            new_val = val * conv  # type: ignore
     except TypeError as e:
         new_val = val
     return new_val
