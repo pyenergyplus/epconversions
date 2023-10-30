@@ -757,10 +757,11 @@ IP_DEFAULT: dict[str, str] = {
 }
 
 
-def getconversions(
-    txt: str = TXT,
-) -> tuple[UnitDict, UnitDict, UnitDictVal, UnitDictVal]:
-    """create the conversion data structure"""
+def getconversions(txt: str) -> tuple[UnitDict, UnitDict, UnitDictVal, UnitDictVal]:
+    """
+    create the conversion data structure
+
+    """
     msp = txt.split("!\n")
     c1 = msp[0].splitlines()
     c1.pop(0)
@@ -805,6 +806,10 @@ def getconversions(
 
 
 def setdefaultindct(dct: Dict[str, Any]) -> UnitDict:
+    """
+    for internal use
+
+    """
     newdct = {}
     for key in dct:
         d = dict(defaultkey=dct[key][0][0])
@@ -820,7 +825,8 @@ def convert2ip(
     unitstr: bool = True,
     wrapin: Optional[str] = None,
 ) -> Union[float, tuple[float, str]]:
-    """convert val from si units to ip units
+    """
+    convert val from si units to ip units
     It can also return a unit string wrapped in something like `[ft]`"""
     # calculates the new value
     # get conversion factor
@@ -921,6 +927,7 @@ def doconversion(
     conv: Optional[Union[str, float, None, list[str]]],
     reverse: bool = False,
 ) -> float:
+    """does the conversions"""
     if reverse:
         try:
             conv = 1 / conv  # type: ignore
@@ -1001,10 +1008,12 @@ def noconversion(
 
 
 def remove_defaultkey(a: UnitDict) -> UnitDict:
+    """for internal use"""
     return {k: {kk: a[k][kk] for kk in a[k] if kk != "defaultkey"} for k in a}
 
 
 def getdefaultkey(a: UnitDict) -> UnitDictVal:
+    """for internal use"""
     return {k: a[k]["defaultkey"] for k in a}
 
 

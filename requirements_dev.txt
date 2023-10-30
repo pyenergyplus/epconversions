@@ -12,3 +12,4 @@ pytest
 black
 
 mypy
+sphinx-autodoc-typehints
