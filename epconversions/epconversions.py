@@ -7,6 +7,15 @@
 
 """Conversion functions for EnergyPlus"""
 
+from typing import Dict
+from typing import Optional
+from typing import Union
+from typing import Any
+
+UnitDictValVal = Optional[Union[str, float, None, list[str]]]
+UnitDictVal = Dict[str, UnitDictValVal]
+UnitDict = Dict[str, UnitDictVal]
+
 TXT = """! Default IP conversions (no ip-units necessary)
 !      $/(m3/s)               =>   $/(ft3/min)         0.000472000059660808
 !      $/(W/K)                =>   $/(Btu/h-F)         0.52667614683731
@@ -108,7 +117,7 @@ TXT = """! Default IP conversions (no ip-units necessary)
 !      W/m-K3                 =>   Btu/h-F3-ft         0.178565727817582
 !      W/person               =>   Btu/h-person        3.4121412858518
 !
-! Other conversions supported (needs the \ip-units code)
+! Other conversions supported (needs the \\ip-units code)
 !
 !      kPa                    =>   inHg                0.29523
 !      m                      =>   in                  39.3700787401575
@@ -169,14 +178,6 @@ TXT = """! Default IP conversions (no ip-units necessary)
 ! **************************************************************************
 """
 
-from typing import Dict
-from typing import Optional
-from typing import Union
-from typing import Any
-
-UnitDictValVal = Optional[Union[str, float, None, list[str]]]
-UnitDictVal = Dict[str, UnitDictValVal]
-UnitDict = Dict[str, UnitDictVal]
 
 # there are 3 kinds of conversions
 # 1. no ip-units -> use 1st
@@ -249,7 +250,10 @@ SI: UnitDict = {
     "m3": {"ft3": 35.3146667214886, "gal": 264.172037284185},
     "m3/GJ": {"ft3/MWh": 127.13292},
     "m3/hr": {"ft3/hr": 35.3146667214886, "gal/hr": 264.172037284185},
-    "m3/hr-m2": {"ft3/hr-ft2": 3.28083989501312, "gal/hr-ft2": 24.5423853466941},
+    "m3/hr-m2": {
+        "ft3/hr-ft2": 3.28083989501312,
+        "gal/hr-ft2": 24.5423853466941
+    },
     "m3/hr-person": {
         "ft3/hr-person": 35.3146667214886,
         "gal/hr-person": 264.172037284185,
@@ -257,7 +261,10 @@ SI: UnitDict = {
     "m3/kg": {"ft3/lb": 16.018},
     "m3/m2": {"ft3/ft2": 3.28083989501312, "gal/ft2": 24.5423853466941},
     "m3/MJ": {"ft3/kWh": 127.13292},
-    "m3/person": {"ft3/person": 35.3146667214886, "gal/person": 264.172037284185},
+    "m3/person": {
+        "ft3/person": 35.3146667214886,
+        "gal/person": 264.172037284185
+    },
     "m3/s": {"ft3/min": 2118.88000328931, "gal/min": 15850.3222370511},
     "m3/s-m": {"ft3/min-ft": 645.89, "gal/min-ft": 4831.17821785317},
     "m3/s-m2": {"ft3/min-ft2": 196.85},
@@ -290,7 +297,10 @@ SI: UnitDict = {
     "W/m2": {"Btu/h-ft2": 0.316957210776545, "W/ft2": 0.09290304, "W/m2": 1.0},
     "W/m2-K": {"Btu/h-ft2-F": 0.176110194261872},
     "W/m2-K2": {"Btu/h-ft2-F2": 0.097826},
-    "W/m-K": {"Btu-in/h-ft2-F": 6.93481276005548, "Btu/h-ft-F": 0.577796066000163},
+    "W/m-K": {
+        "Btu-in/h-ft2-F": 6.93481276005548,
+        "Btu/h-ft-F": 0.577796066000163
+    },
     "W/m-K2": {"Btu/h-F2-ft": 0.321418310071648},
     "W/m-K3": {"Btu/h-F3-ft": 0.178565727817582},
     "W/person": {"Btu/h-person": 3.4121412858518, "W/person": 1.0},
@@ -350,7 +360,10 @@ IP: UnitDict = {
     "grains/lb": {"g/kg": 7.0},
     "lb/mol": {"g/mol": 0.0022046},
     "lb/ft-s": {"g/m-s": 0.000671968949659, "kg/m-s": 0.67196893069637},
-    "lb/ft-s-F": {"g/m-s-K": 0.000373574867724868, "kg/m-s-K": 0.373316072609094},
+    "lb/ft-s-F": {
+        "g/m-s-K": 0.000373574867724868,
+        "kg/m-s-K": 0.373316072609094
+    },
     "ton-hrs": {"GJ": 78.9889415481832},
     "Wh": {"J": 0.000277777777777778},
     "Btu/F": {"J/K": 526.565},
@@ -774,7 +787,7 @@ def getconversions(
         try:
             si.setdefault(cc[0], []).append((cc[1], float(cc[-1])))
             ip.setdefault(cc[1], []).append((cc[0], float(cc[-1])))
-        except ValueError as e:
+        except ValueError:
             si.setdefault(cc[0], []).append((cc[1], cc[2:]))
             ip.setdefault(cc[1], []).append((cc[0], cc[2:]))
     c1 = msp[2].splitlines()
@@ -785,7 +798,7 @@ def getconversions(
         try:
             si.setdefault(cc[0], []).append((cc[1], float(cc[-1])))
             ip.setdefault(cc[1], []).append((cc[0], float(cc[-1])))
-        except ValueError as e:
+        except ValueError:
             si.setdefault(cc[0], []).append((cc[1], cc[2:]))
             ip.setdefault(cc[1], []).append((cc[0], cc[2:]))
     c2 = msp[3].splitlines()
@@ -923,7 +936,7 @@ def doconversion(
     if reverse:
         try:
             conv = 1 / conv  # type: ignore
-        except TypeError as e:
+        except TypeError:
             pass
     try:
         if conv == ["1.8", "(plus", "32)"]:
@@ -933,7 +946,7 @@ def doconversion(
                 new_val = (val * 1.8) + 32
         else:
             new_val = val * conv  # type: ignore
-    except TypeError as e:
+    except TypeError:
         new_val = val
     return new_val
 
@@ -956,7 +969,10 @@ def getipunits(siunit: str) -> list[str]:
 
 
 def noconversion(
-    val: float, siunits: str, unitstr: bool = True, wrapin: Optional[str] = None
+    val: float,
+    siunits: str,
+    unitstr: bool = True,
+    wrapin: Optional[str] = None
 ) -> Union[float, tuple[float, str]]:
     """make no conversion.
     Used to put the correct units in place"""
@@ -1017,7 +1033,8 @@ def getdefaultkey(a: UnitDict) -> UnitDictVal:
 # TODO
 # - getipunits(siunit)
 # - getsiunits(ipunit)
-# - getconversioncategories() # length, volume, u-value etc (make this manually using schema.epJSON)
+# - getconversioncategories()
+    # length, volume, u-value etc (make this manually using schema.epJSON)
 #
 # code to get the categories of the units
 # extract and hand edit

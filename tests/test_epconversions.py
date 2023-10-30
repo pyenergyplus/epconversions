@@ -783,14 +783,20 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
 !      m/s                    =>   ft/min              196.850393700787
 !      m/s                    =>   miles/hr            2.2369362920544
 !
-! Other conversions supported (needs the \ip-units code)
+! Other conversions supported (needs the \\ip-units code)
 !
 !
 ! Units fields that are not translated
 ! **************************************************************************
 """,
             (
-                {"m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544}},
+                {
+                    "m/s":
+                        {
+                            "ft/min": 196.850393700787,
+                            "miles/hr": 2.2369362920544
+                        }
+                },
                 {
                     "ft/min": {"m/s": 196.850393700787},
                     "miles/hr": {"m/s": 2.2369362920544},
@@ -805,7 +811,7 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
 !      m/s                    =>   ft/min              196.850393700787
 !      m/s                    =>   miles/hr            2.2369362920544
 !
-! Other conversions supported (needs the \ip-units code)
+! Other conversions supported (needs the \\ip-units code)
 !
 !      m                      =>   in                  39.3700787401575
 !
@@ -816,7 +822,11 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
             (
                 {
                     "m": {"ft": 3.28083989501312, "in": 39.3700787401575},
-                    "m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544},
+                    "m/s":
+                        {
+                            "ft/min": 196.850393700787,
+                            "miles/hr": 2.2369362920544
+                        },
                     "ppm": {"ppm": None},
                 },
                 {
@@ -863,7 +873,10 @@ def test_getconversions(txt, expected):
             },
             {
                 "m": {"ft": 3.28083989501312, "in": 39.3700787401575},
-                "m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544},
+                "m/s": {
+                    "ft/min": 196.850393700787,
+                    "miles/hr": 2.2369362920544
+                },
                 "ppm": {"ppm": None},
             },
         ),  # withdefaultkey, expected
@@ -893,10 +906,10 @@ def remove_defaultkey(withdefaultkey, expected):
                 "ppm": {"defaultkey": "ppm", "ppm": None},
             },
             {"m": "ft", "m/s": "ft/min", "ppm": "ppm"},
-        ),  # withdefaultkey, expecte
+        ),  # withdefaultkey, expected
     ],
 )
-def getdefaultkey(withdefaultkey, expecte):
+def getdefaultkey(withdefaultkey, expected):
     """pytest for getdefaultkey"""
     result = epconversions.getdefaultkey(withdefaultkey)
     assert result == expected
