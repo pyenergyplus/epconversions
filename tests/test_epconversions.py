@@ -790,13 +790,7 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
 ! **************************************************************************
 """,
             (
-                {
-                    "m/s":
-                        {
-                            "ft/min": 196.850393700787,
-                            "miles/hr": 2.2369362920544
-                        }
-                },
+                {"m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544}},
                 {
                     "ft/min": {"m/s": 196.850393700787},
                     "miles/hr": {"m/s": 2.2369362920544},
@@ -822,11 +816,7 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
             (
                 {
                     "m": {"ft": 3.28083989501312, "in": 39.3700787401575},
-                    "m/s":
-                        {
-                            "ft/min": 196.850393700787,
-                            "miles/hr": 2.2369362920544
-                        },
+                    "m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544},
                     "ppm": {"ppm": None},
                 },
                 {
@@ -873,10 +863,7 @@ def test_getconversions(txt, expected):
             },
             {
                 "m": {"ft": 3.28083989501312, "in": 39.3700787401575},
-                "m/s": {
-                    "ft/min": 196.850393700787,
-                    "miles/hr": 2.2369362920544
-                },
+                "m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544},
                 "ppm": {"ppm": None},
             },
         ),  # withdefaultkey, expected
