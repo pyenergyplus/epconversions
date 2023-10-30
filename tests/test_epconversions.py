@@ -783,7 +783,7 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
 !      m/s                    =>   ft/min              196.850393700787
 !      m/s                    =>   miles/hr            2.2369362920544
 !
-! Other conversions supported (needs the \ip-units code)
+! Other conversions supported (needs the \\ip-units code)
 !
 !
 ! Units fields that are not translated
@@ -805,7 +805,7 @@ def test_noconversion(val, siunits, unitstr, wrapin, expected):
 !      m/s                    =>   ft/min              196.850393700787
 !      m/s                    =>   miles/hr            2.2369362920544
 !
-! Other conversions supported (needs the \ip-units code)
+! Other conversions supported (needs the \\ip-units code)
 !
 !      m                      =>   in                  39.3700787401575
 !
@@ -893,10 +893,10 @@ def remove_defaultkey(withdefaultkey, expected):
                 "ppm": {"defaultkey": "ppm", "ppm": None},
             },
             {"m": "ft", "m/s": "ft/min", "ppm": "ppm"},
-        ),  # withdefaultkey, expecte
+        ),  # withdefaultkey, expected
     ],
 )
-def getdefaultkey(withdefaultkey, expecte):
+def getdefaultkey(withdefaultkey, expected):
     """pytest for getdefaultkey"""
     result = epconversions.getdefaultkey(withdefaultkey)
     assert result == expected

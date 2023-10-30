@@ -7,6 +7,15 @@
 
 """Conversion functions for EnergyPlus"""
 
+from typing import Dict
+from typing import Optional
+from typing import Union
+from typing import Any
+
+UnitDictValVal = Optional[Union[str, float, None, list[str]]]
+UnitDictVal = Dict[str, UnitDictValVal]
+UnitDict = Dict[str, UnitDictVal]
+
 TXT = """! Default IP conversions (no ip-units necessary)
 !      $/(m3/s)               =>   $/(ft3/min)         0.000472000059660808
 !      $/(W/K)                =>   $/(Btu/h-F)         0.52667614683731
@@ -108,7 +117,7 @@ TXT = """! Default IP conversions (no ip-units necessary)
 !      W/m-K3                 =>   Btu/h-F3-ft         0.178565727817582
 !      W/person               =>   Btu/h-person        3.4121412858518
 !
-! Other conversions supported (needs the \ip-units code)
+! Other conversions supported (needs the \\ip-units code)
 !
 !      kPa                    =>   inHg                0.29523
 !      m                      =>   in                  39.3700787401575
@@ -169,14 +178,6 @@ TXT = """! Default IP conversions (no ip-units necessary)
 ! **************************************************************************
 """
 
-from typing import Dict
-from typing import Optional
-from typing import Union
-from typing import Any
-
-UnitDictValVal = Optional[Union[str, float, None, list[str]]]
-UnitDictVal = Dict[str, UnitDictValVal]
-UnitDict = Dict[str, UnitDictVal]
 
 # there are 3 kinds of conversions
 # 1. no ip-units -> use 1st
@@ -774,7 +775,7 @@ def getconversions(
         try:
             si.setdefault(cc[0], []).append((cc[1], float(cc[-1])))
             ip.setdefault(cc[1], []).append((cc[0], float(cc[-1])))
-        except ValueError as e:
+        except ValueError:
             si.setdefault(cc[0], []).append((cc[1], cc[2:]))
             ip.setdefault(cc[1], []).append((cc[0], cc[2:]))
     c1 = msp[2].splitlines()
@@ -785,7 +786,7 @@ def getconversions(
         try:
             si.setdefault(cc[0], []).append((cc[1], float(cc[-1])))
             ip.setdefault(cc[1], []).append((cc[0], float(cc[-1])))
-        except ValueError as e:
+        except ValueError:
             si.setdefault(cc[0], []).append((cc[1], cc[2:]))
             ip.setdefault(cc[1], []).append((cc[0], cc[2:]))
     c2 = msp[3].splitlines()
@@ -923,7 +924,7 @@ def doconversion(
     if reverse:
         try:
             conv = 1 / conv  # type: ignore
-        except TypeError as e:
+        except TypeError:
             pass
     try:
         if conv == ["1.8", "(plus", "32)"]:
@@ -933,7 +934,7 @@ def doconversion(
                 new_val = (val * 1.8) + 32
         else:
             new_val = val * conv  # type: ignore
-    except TypeError as e:
+    except TypeError:
         new_val = val
     return new_val
 
@@ -1017,7 +1018,8 @@ def getdefaultkey(a: UnitDict) -> UnitDictVal:
 # TODO
 # - getipunits(siunit)
 # - getsiunits(ipunit)
-# - getconversioncategories() # length, volume, u-value etc (make this manually using schema.epJSON)
+# - getconversioncategories()
+# length, volume, u-value etc (make this manually using schema.epJSON)
 #
 # code to get the categories of the units
 # extract and hand edit
