@@ -6,6 +6,7 @@
 # =======================================================================
 """pytest for epconversions"""
 import pytest
+
 # import eppy3000.experimental.epconversions as epconversions
 from epconversions import epconversions
 
@@ -771,4 +772,131 @@ def test_getipunits(siunits, expected):
 )
 def test_noconversion(val, siunits, unitstr, wrapin, expected):
     result = epconversions.noconversion(val, siunits, unitstr, wrapin)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "txt, expected",
+    [
+        (
+            """! Default IP conversions (no ip-units necessary)
+!      m/s                    =>   ft/min              196.850393700787
+!      m/s                    =>   miles/hr            2.2369362920544
+!
+! Other conversions supported (needs the \ip-units code)
+!
+!
+! Units fields that are not translated
+! **************************************************************************
+""",
+            (
+                {"m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544}},
+                {
+                    "ft/min": {"m/s": 196.850393700787},
+                    "miles/hr": {"m/s": 2.2369362920544},
+                },
+                {"m/s": "ft/min"},
+                {"ft/min": "m/s", "miles/hr": "m/s"},
+            ),
+        ),  # txt, expected
+        (
+            """! Default IP conversions (no ip-units necessary)
+!      m                      =>   ft                  3.28083989501312
+!      m/s                    =>   ft/min              196.850393700787
+!      m/s                    =>   miles/hr            2.2369362920544
+!
+! Other conversions supported (needs the \ip-units code)
+!
+!      m                      =>   in                  39.3700787401575
+!
+! Units fields that are not translated
+!      ppm
+! **************************************************************************
+""",
+            (
+                {
+                    "m": {"ft": 3.28083989501312, "in": 39.3700787401575},
+                    "m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544},
+                    "ppm": {"ppm": None},
+                },
+                {
+                    "ft": {"m": 3.28083989501312},
+                    "ft/min": {"m/s": 196.850393700787},
+                    "miles/hr": {"m/s": 2.2369362920544},
+                    "in": {"m": 39.3700787401575},
+                    "ppm": {"ppm": None},
+                },
+                {"m": "ft", "m/s": "ft/min", "ppm": "ppm"},
+                {
+                    "ft": "m",
+                    "ft/min": "m/s",
+                    "miles/hr": "m/s",
+                    "in": "m",
+                    "ppm": "ppm",
+                },
+            ),
+        ),  # txt, expected
+    ],
+)
+def test_getconversions(txt, expected):
+    """py.test for getconversions"""
+    result = epconversions.getconversions(txt)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "withdefaultkey, expected",
+    [
+        (
+            {
+                "m": {
+                    "defaultkey": "ft",
+                    "ft": 3.28083989501312,
+                    "in": 39.3700787401575,
+                },
+                "m/s": {
+                    "defaultkey": "ft/min",
+                    "ft/min": 196.850393700787,
+                    "miles/hr": 2.2369362920544,
+                },
+                "ppm": {"defaultkey": "ppm", "ppm": None},
+            },
+            {
+                "m": {"ft": 3.28083989501312, "in": 39.3700787401575},
+                "m/s": {"ft/min": 196.850393700787, "miles/hr": 2.2369362920544},
+                "ppm": {"ppm": None},
+            },
+        ),  # withdefaultkey, expected
+    ],
+)
+def remove_defaultkey(withdefaultkey, expected):
+    """py.test for remove_defaultkey"""
+    result = epconversions.remove_defaultkey(withdefaultkey)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "withdefaultkey, expected",
+    [
+        (
+            {
+                "m": {
+                    "defaultkey": "ft",
+                    "ft": 3.28083989501312,
+                    "in": 39.3700787401575,
+                },
+                "m/s": {
+                    "defaultkey": "ft/min",
+                    "ft/min": 196.850393700787,
+                    "miles/hr": 2.2369362920544,
+                },
+                "ppm": {"defaultkey": "ppm", "ppm": None},
+            },
+            {"m": "ft", "m/s": "ft/min", "ppm": "ppm"},
+        ),  # withdefaultkey, expecte
+    ],
+)
+def getdefaultkey(withdefaultkey, expecte):
+    """pytest for getdefaultkey"""
+    result = epconversions.getdefaultkey(withdefaultkey)
     assert result == expected
