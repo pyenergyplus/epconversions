@@ -20,9 +20,9 @@ Steps for making updates to the software, based on C4 document above:
     - makes changes
     - commits with appropriate commit following message
       ::
-      
+
         fixed issue #n (*on first line*)
-        
+
         Problem: describe Problem
         Solution: describe Solution
 
@@ -38,7 +38,7 @@ After the merge, The *Contributer* may want to take the following steps:
     - This has to be done in the command line
       ::
 
-        git pull --rebase upstream master
+        git pull --rebase upstream main
 
 
     - To do the above you need a remote called `upstream`. You can set this up by the following line in the command line
