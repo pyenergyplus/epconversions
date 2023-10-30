@@ -38,7 +38,7 @@ jobs:
         black . --check
     - name: check type annotations with mypy
       run: |
-        # stop the build if there are Python syntax errors or undefined names
+        # stop the build type annotation errors
         mypy --strict $(git ls-files 'epconversions/*.py')
     - name: Test with pytest
       run: |
