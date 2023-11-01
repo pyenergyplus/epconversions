@@ -956,11 +956,20 @@ def allipunits() -> list[str]:
     return list(IP.keys())
 
 
-def getipunits(siunit: str) -> list[str]:
+def getipunits(siunit: str, si: Optional[UnitDict] = None) -> set[str]:
     """return all the ip units avaliable for this si unit"""
-    dct = dict(SI[siunit])
-    # dct.pop("defaultkey")
-    return list(dct.keys())
+    if not si:
+        si = SI
+    dct = dict(si[siunit])
+    return set(dct.keys())
+
+
+def getsiunits(ipunit: str, ip: Optional[UnitDict] = None) -> set[str]:
+    """return all the si units avaliable for this ip unit"""
+    if not ip:
+        ip = IP
+    dct = dict(ip[ipunit])
+    return set(dct.keys())
 
 
 def noconversion(
@@ -1017,6 +1026,16 @@ def getdefaultkey(a: UnitDict) -> UnitDictVal:
     return {k: a[k]["defaultkey"] for k in a}
 
 
+def defaultsiunit(ipunit: str) -> str:
+    """get the default siunit for the given ipunit"""
+    return IP_DEFAULT[ipunit]
+
+
+def defaultipunit(siunit: str) -> str:
+    """get the default ipunit for the given siunit"""
+    return SI_DEFAULT[siunit]
+
+
 # functions needed:
 #
 # DONE
@@ -1025,6 +1044,8 @@ def getdefaultkey(a: UnitDict) -> UnitDictVal:
 # - allsiunits()
 # - allipunits()
 # TODO
+# - defaultsiunit
+# - defaultipunit
 # - getipunits(siunit)
 # - getsiunits(ipunit)
 # - getconversioncategories()

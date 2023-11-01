@@ -900,3 +900,51 @@ def getdefaultkey(withdefaultkey, expected):
     """pytest for getdefaultkey"""
     result = epconversions.getdefaultkey(withdefaultkey)
     assert result == expected
+
+
+@pytest.mark.parametrize(
+    "siunit, si, expected",
+    [
+        ("C", None, {"F", "C"}),  # siunit, si, expected
+    ],
+)
+def test_getipunits(siunit, si, expected):
+    """pytest for getipunits"""
+    result = epconversions.getipunits(siunit, si)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "ipunit, ip, expected",
+    [
+        ("F", None, {"C"}),  # ipunit, ip, expected
+    ],
+)
+def test_getsiunits(ipunit, ip, expected):
+    """py.test for getsiunits"""
+    result = epconversions.getsiunits(ipunit, ip)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "ipunit, expected",
+    [
+        ("F", "C"),  # ipunit, expected
+    ],
+)
+def test_defaultsiunit(ipunit, expected):
+    """pytest for defaultsiunit"""
+    result = epconversions.defaultsiunit(ipunit)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "siunit, expected",
+    [
+        ("C", "F"),  # siunit, expected
+    ],
+)
+def test_defaultipunit(siunit, expected):
+    """pytest for defaultipunit"""
+    result = epconversions.defaultipunit(siunit)
+    assert result == expected
