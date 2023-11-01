@@ -757,7 +757,9 @@ IP_DEFAULT: dict[str, str] = {
 }
 
 
-def getconversions(txt: Optional[str]=None) -> tuple[UnitDict, UnitDict, Dict[str, str], Dict[str, str]]:
+def getconversions(
+    txt: Optional[str] = None,
+) -> tuple[UnitDict, UnitDict, Dict[str, str], Dict[str, str]]:
     """
     create the conversion data structure
 
@@ -807,8 +809,8 @@ def getconversions(txt: Optional[str]=None) -> tuple[UnitDict, UnitDict, Dict[st
     return (
         remove_defaultkey(ssi),
         remove_defaultkey(iip),
-        {k : str(v) for k, v in getdefaultkey(ssi).items()},
-        {k : str(v) for k, v in getdefaultkey(iip).items()},
+        {k: str(v) for k, v in getdefaultkey(ssi).items()},
+        {k: str(v) for k, v in getdefaultkey(iip).items()},
     )
 
 
@@ -836,7 +838,7 @@ def convert2ip(
     convert val from si units to ip units
 
     It can also return a unit string wrapped in something like `[ft]`
-    
+
 
     :param val: a numeric value
     :param siunits: the unit for the value (kg, m, etc.)
@@ -845,7 +847,7 @@ def convert2ip(
     :param wrapin: wrap the init string in this
     :returns new_val: The new converted value
     :returns ustr: returns unit string if unitstr=True
-    
+
     """
     # calculates the new value
     # get conversion factor
