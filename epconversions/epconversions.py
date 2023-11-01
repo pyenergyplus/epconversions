@@ -757,11 +757,18 @@ IP_DEFAULT: dict[str, str] = {
 }
 
 
-def getconversions(txt: str) -> tuple[UnitDict, UnitDict, UnitDictVal, UnitDictVal]:
+def getconversions(txt: Optional[str]=None) -> tuple[UnitDict, UnitDict, Dict[str, str], Dict[str, str]]:
     """
     create the conversion data structure
 
+    :param txt: the raw text from the IDD which contains the conversion factors
+    :returns si: The si dict
+    :returns ip: the ip dict
+    :returns si_default: The default si values
+    :returns ip_default: the default ip values
     """
+    if not txt:
+        txt = TXT
     msp = txt.split("!\n")
     c1 = msp[0].splitlines()
     c1.pop(0)
@@ -800,8 +807,8 @@ def getconversions(txt: str) -> tuple[UnitDict, UnitDict, UnitDictVal, UnitDictV
     return (
         remove_defaultkey(ssi),
         remove_defaultkey(iip),
-        getdefaultkey(ssi),
-        getdefaultkey(iip),
+        {k : str(v) for k, v in getdefaultkey(ssi).items()},
+        {k : str(v) for k, v in getdefaultkey(iip).items()},
     )
 
 
@@ -827,7 +834,19 @@ def convert2ip(
 ) -> Union[float, tuple[float, str]]:
     """
     convert val from si units to ip units
-    It can also return a unit string wrapped in something like `[ft]`"""
+
+    It can also return a unit string wrapped in something like `[ft]`
+    
+
+    :param val: a numeric value
+    :param siunits: the unit for the value (kg, m, etc.)
+    :param ipunits: if you know the ip unit you want returned
+    :param unitstr: if you want the unit string returned
+    :param wrapin: wrap the init string in this
+    :returns new_val: The new converted value
+    :returns ustr: returns unit string if unitstr=True
+    
+    """
     # calculates the new value
     # get conversion factor
     conv: Optional[Union[str, float, None, list[str]]]

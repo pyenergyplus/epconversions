@@ -12,4 +12,5 @@ pytest
 black
 
 mypy
+sphinxcontrib-napoleon
 sphinx-autodoc-typehints
