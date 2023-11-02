@@ -179,7 +179,7 @@ TXT = """! Default IP conversions (no ip-units necessary)
 """
 
 
-# there are 3 kinds of conversions
+# there are 3 kinds of conversions in the TXT file above
 # 1. no ip-units -> use 1st
 # 2. expected ip-units -> use second
 # 3. use the unit as is if it is in the 3rd category
@@ -761,13 +761,16 @@ def getconversions(
     txt: Optional[str] = None,
 ) -> tuple[UnitDict, UnitDict, Dict[str, str], Dict[str, str]]:
     """
-    create the conversion data structure
+    create the conversion data structure for this library
+
+    This function generates the values in the constants SI, IP,
+    SI_DEFAULT and IP_DEFAULT.
 
     :param txt: the raw text from the IDD which contains the conversion factors
-    :returns si: The si dict
-    :returns ip: the ip dict
-    :returns si_default: The default si values
-    :returns ip_default: the default ip values
+    :returns SI: The value of the SI constant
+    :returns IP: The value of the IP constant
+    :returns SI_DEFAULT: The value of the SI_DEFAULT
+    :returns IP_DEFAULT: The value of the IP_DEFAULT
     """
     if not txt:
         txt = TXT
@@ -805,18 +808,18 @@ def getconversions(
     for c in [c.split()[-1] for c in c2]:
         si.setdefault(c, []).append((c, None))
         ip.setdefault(c, []).append((c, None))
-    ssi, iip = setdefaultindct(si), setdefaultindct(ip)
+    ssi, iip = _setdefaultindct(si), _setdefaultindct(ip)
     return (
-        remove_defaultkey(ssi),
-        remove_defaultkey(iip),
-        {k: str(v) for k, v in getdefaultkey(ssi).items()},
-        {k: str(v) for k, v in getdefaultkey(iip).items()},
+        _remove_defaultkey(ssi),  # SI
+        _remove_defaultkey(iip),  # IP
+        {k: str(v) for k, v in _getdefaultkey(ssi).items()},  # SI_DEFAULT
+        {k: str(v) for k, v in _getdefaultkey(iip).items()},  # IP_DEFAULT
     )
 
 
-def setdefaultindct(dct: Dict[str, Any]) -> UnitDict:
+def _setdefaultindct(dct: Dict[str, Any]) -> UnitDict:
     """
-    for internal use
+    Sets a default value to be used internally by 'getconversions`
 
     """
     newdct = {}
@@ -948,7 +951,13 @@ def doconversion(
     conv: Optional[Union[str, float, None, list[str]]],
     reverse: bool = False,
 ) -> float:
-    """does the conversions"""
+    """does the conversions
+    
+    :param val: val is converted
+    :param conv: this is the conversion factor or rule
+    :param reverse: if True, use 1/conv or reverse of the rule
+    :returns new_value: the converted value
+    """
     if reverse:
         try:
             conv = 1 / conv  # type: ignore
@@ -998,20 +1007,6 @@ def noconversion(
 ) -> Union[float, tuple[float, str]]:
     """make no conversion.
     Used to put the correct units in place"""
-    # calculates the new value
-    # get conversion factor
-    #     if not siunits:
-    #         conv = 1
-    #     elif siunits not in SI:
-    #         conv = 1
-    #     elif not ipunits:
-    #         default = SI[siunits]["defaultkey"]
-    #         conv = SI[siunits][default]
-    #     else:
-    #         conv = SI[siunits][ipunits]
-
-    # do conversion
-    # new_val = doconversion(val, conv)
     new_val = val
 
     # make the unit string
@@ -1037,13 +1032,13 @@ def noconversion(
         return new_val
 
 
-def remove_defaultkey(a: UnitDict) -> UnitDict:
+def _remove_defaultkey(a: UnitDict) -> UnitDict:
     """for internal use"""
     return {k: {kk: a[k][kk] for kk in a[k] if kk != "defaultkey"} for k in a}
 
 
-def getdefaultkey(a: UnitDict) -> UnitDictVal:
-    """for internal use"""
+def _getdefaultkey(a: UnitDict) -> UnitDictVal:
+    """for internal use by getconversions"""
     return {k: a[k]["defaultkey"] for k in a}
 
 
@@ -1057,33 +1052,3 @@ def defaultipunit(siunit: str) -> str:
     return SI_DEFAULT[siunit]
 
 
-# functions needed:
-#
-# DONE
-# - convert2ip(val, siunits, ipunits=None, unitstr=True, wrapin='[]')
-# - convert2si(val, ipunits, siunits=None, unitstr=True, wrapin='[]')
-# - allsiunits()
-# - allipunits()
-# TODO
-# - defaultsiunit
-# - defaultipunit
-# - getipunits(siunit)
-# - getsiunits(ipunit)
-# - getconversioncategories()
-# length, volume, u-value etc (make this manually using schema.epJSON)
-#
-# code to get the categories of the units
-# extract and hand edit
-# epj = read an epj file
-# dd = {}
-# for kkey in epj.epschema.epschemaobjects:
-#     o = epj.epschema.epschemaobjects[kkey]
-#     for key in o:
-#         if 'units' in o[key]:
-#             cat = o[key]['units']
-#             print(key, cat)
-#             dd.setdefault(cat, []).append(key)
-#
-# for key in dd:
-#     for item in dd[key]:
-#         print(f"{key},{item}")
