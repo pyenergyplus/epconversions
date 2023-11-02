@@ -179,7 +179,7 @@ TXT = """! Default IP conversions (no ip-units necessary)
 """
 
 
-# there are 3 kinds of conversions
+# there are 3 kinds of conversions in the TXT file above
 # 1. no ip-units -> use 1st
 # 2. expected ip-units -> use second
 # 3. use the unit as is if it is in the 3rd category
@@ -757,11 +757,22 @@ IP_DEFAULT: dict[str, str] = {
 }
 
 
-def getconversions(txt: str) -> tuple[UnitDict, UnitDict, UnitDictVal, UnitDictVal]:
+def getconversions(
+    txt: Optional[str] = None,
+) -> tuple[UnitDict, UnitDict, Dict[str, str], Dict[str, str]]:
     """
-    create the conversion data structure
+    create the conversion data structure for this library
 
+    This function generates the values in the constants SI, IP, SI_DEFAULT and IP_DEFAULT. Ulikely that you will ever neeed to use this function. It was used to build up this module
+
+    :param txt: the raw text from the IDD which contains the conversion factors
+    :returns SI: The value of the SI constant
+    :returns IP: The value of the IP constant
+    :returns SI_DEFAULT: The value of the SI_DEFAULT
+    :returns IP_DEFAULT: The value of the IP_DEFAULT
     """
+    if not txt:
+        txt = TXT
     msp = txt.split("!\n")
     c1 = msp[0].splitlines()
     c1.pop(0)
@@ -796,18 +807,18 @@ def getconversions(txt: str) -> tuple[UnitDict, UnitDict, UnitDictVal, UnitDictV
     for c in [c.split()[-1] for c in c2]:
         si.setdefault(c, []).append((c, None))
         ip.setdefault(c, []).append((c, None))
-    ssi, iip = setdefaultindct(si), setdefaultindct(ip)
+    ssi, iip = _setdefaultindct(si), _setdefaultindct(ip)
     return (
-        remove_defaultkey(ssi),
-        remove_defaultkey(iip),
-        getdefaultkey(ssi),
-        getdefaultkey(iip),
+        _remove_defaultkey(ssi),  # SI
+        _remove_defaultkey(iip),  # IP
+        {k: str(v) for k, v in _getdefaultkey(ssi).items()},  # SI_DEFAULT
+        {k: str(v) for k, v in _getdefaultkey(iip).items()},  # IP_DEFAULT
     )
 
 
-def setdefaultindct(dct: Dict[str, Any]) -> UnitDict:
+def _setdefaultindct(dct: Dict[str, Any]) -> UnitDict:
     """
-    for internal use
+    Sets a default value to be used internally by 'getconversions`
 
     """
     newdct = {}
@@ -820,39 +831,67 @@ def setdefaultindct(dct: Dict[str, Any]) -> UnitDict:
 
 def convert2ip(
     val: float,
-    siunits: str,
-    ipunits: Optional[str] = None,
+    siunit: str,
+    ipunit: Optional[str] = None,
     unitstr: bool = True,
     wrapin: Optional[str] = None,
 ) -> Union[float, tuple[float, str]]:
     """
     convert val from si units to ip units
-    It can also return a unit string wrapped in something like `[ft]`"""
+
+    the conversion will be done to the default ip unit. if you have a specific ip unit you want to convert to, give it's value to the `ipunit` parameter
+
+    By default, the function will also return the ip unit string. to return only the ip value, set `unitstr=False`. You can wrap the unit string by setting a value to wrapin='[X]' where X is replaced by the unit string. '['  and ']' can be any string
+
+    Sample code::
+
+        epconversions.convert2ip(4, 'm')
+        >> (13.12335958005248, 'ft')
+        epconversions.convert2ip(4, 'm', 'in')
+        >> (157.48031496063, 'in')
+        epconversions.convert2ip(4, 'm', 'in', unitstr=None)
+        >> 157.48031496063
+        epconversions.convert2ip(4, 'm', 'in', wrapin='[X]')
+        >> (157.48031496063, '[in]')
+        epconversions.convert2ip(4, 'm', 'in', wrapin='unit = [X]')
+        >> (157.48031496063, 'unit = [in]')
+
+
+
+    :param val: a numeric value
+    :param siunit: the unit for the value (kg, m, etc.)
+    :param ipunit: if you know the ip unit you want returned. Else it will use the default unit
+    :param unitstr: True if you want the unit string returned
+    :param wrapin: wrap the init string in this.
+    :returns new_val: The new converted value
+    :returns ustr: returns unit string if unitstr=True
+
+    """
     # calculates the new value
     # get conversion factor
     conv: Optional[Union[str, float, None, list[str]]]
-    if not siunits:
+    if not siunit:
         conv = 1.0
-    elif siunits not in SI:
+    elif siunit not in SI:
         conv = 1.0
-    elif not ipunits:
-        default = SI_DEFAULT[siunits]
-        conv = SI[siunits][default]
+    elif not ipunit:
+        default = SI_DEFAULT[siunit]
+        conv = SI[siunit][default]
     else:
-        conv = SI[siunits][ipunits]
+        conv = SI[siunit][ipunit]
 
     # do conversion
-    new_val = doconversion(val, conv)
+    new_val = _doconversion(val, conv)
 
     # make the unit string
     ustr = ""
     if unitstr:
-        if not siunits:
+        if not siunit:
             ustr = ""
-        elif siunits not in SI:
-            ustr = siunits
-        elif ipunits:
-            ustr = ipunits
+        elif siunit not in SI:
+            ustr = siunit
+        elif ipunit:
+            ustr = ipunit
         else:
             ustr = default
         # wrap the unitstr
@@ -872,39 +911,67 @@ def convert2ip(
 
 def convert2si(
     val: float,
-    ipunits: str,
-    siunits: Optional[str] = None,
+    ipunit: str,
+    siunit: Optional[str] = None,
     unitstr: bool = True,
     wrapin: Optional[str] = None,
 ) -> Union[float, tuple[float, str]]:
-    """keep the si units
-    It can also return a unit string wrapped in something like `[C]`"""
+    """
+    convert val from ip units to si units
+
+    the conversion will be done to the default si unit. if you have a specific si unit you want to convert to, give it's value to the `siunit` parameter
+
+    By default, the function will also return the si unit string. to return only the si value, set `unitstr=False`. You can wrap the unit string by setting a value to wrapin='[X]' where X is replaced by the unit string. '['  and ']' can be any string
+
+    Sample code::
+
+        epconversions.convert2si(5, 'in')
+        >> (12.700025400050801, 'cm')
+        epconversions.convert2si(5, 'in', 'm')
+        >> (0.12699999999999992, 'm')
+        epconversions.convert2si(5, 'in', 'm', unitstr=False)
+        >> 0.12699999999999992
+        epconversions.convert2si(5, 'in', 'm', wrapin='[X]')
+        >> (0.12699999999999992, '[m]')
+        epconversions.convert2si(5, 'in', 'm', wrapin='unit = [X]')
+        >>  wrapin='unit = [X]')
+
+
+    :param val: a numeric value
+    :param ipunit: the unit for the value (ft, in, F etc.)
+    :param siunit: if you know the si unit you want returned. Else it will use the default unit
+    :param unitstr: True if you want the unit string returned
+    :param wrapin: wrap the init string in this.
+    :returns new_val: The new converted value
+    :returns ustr: returns unit string if unitstr=True
+
+    """
     # calculates the new value
     # get conversion factor
     #     conv: Optional[Union[str, float, None, list[str]]]
     conv: UnitDictValVal
-    if not ipunits:
+    if not ipunit:
         conv = 1.0
-    elif ipunits not in IP:
+    elif ipunit not in IP:
         conv = 1.0
-    elif not siunits:
-        default = IP_DEFAULT[ipunits]
-        conv = IP[ipunits][default]
+    elif not siunit:
+        default = IP_DEFAULT[ipunit]
+        conv = IP[ipunit][default]
     else:
-        conv = IP[ipunits][siunits]
+        conv = IP[ipunit][siunit]
 
     # do conversion
-    new_val = doconversion(val, conv, reverse=True)
+    new_val = _doconversion(val, conv, reverse=True)
 
     # make the unit string
     ustr = ""
     if unitstr:
-        if not ipunits:
+        if not ipunit:
             ustr = ""
-        elif ipunits not in IP:
-            ustr = ipunits
-        elif siunits:
-            ustr = siunits
+        elif ipunit not in IP:
+            ustr = ipunit
+        elif siunit:
+            ustr = siunit
         else:
             ustr = default
         # wrap the unitstr
@@ -922,12 +989,18 @@ def convert2si(
         return new_val
 
 
-def doconversion(
+def _doconversion(
     val: float,
     conv: Optional[Union[str, float, None, list[str]]],
     reverse: bool = False,
 ) -> float:
-    """does the conversions"""
+    """does the conversions
+
+    :param val: val is converted
+    :param conv: this is the conversion factor or rule
+    :param reverse: if True, use 1/conv or reverse of the rule
+    :returns new_value: the converted value
+    """
     if reverse:
         try:
             conv = 1 / conv  # type: ignore
@@ -947,101 +1020,70 @@ def doconversion(
 
 
 def allsiunits() -> list[str]:
-    """return a list of all SI units"""
+    """return a list of all SI units that this module can convert
+
+    :returns siunits: a list of all si units
+    """
     return list(SI.keys())
 
 
 def allipunits() -> list[str]:
-    """return a list of all the IP units"""
+    """return a list of all the IP units that this module can convert
+
+    :returns ipunits: a list of all ip units
+    """
     return list(IP.keys())
 
 
-def getipunits(siunit: str) -> list[str]:
-    """return all the ip units avaliable for this si unit"""
-    dct = dict(SI[siunit])
-    # dct.pop("defaultkey")
-    return list(dct.keys())
+def getipunits(siunit: str, si: Optional[UnitDict] = None) -> set[str]:
+    """return all the ip units avaliable for this si unit
+
+    :param siunit: si unit
+    :param si: Use this in case you want to override the default constant SI
+    :returns ipunits: all the ip units avaliable for this si unit
+    """
+    if not si:
+        si = SI
+    dct = dict(si[siunit])
+    return set(dct.keys())
 
 
-def noconversion(
-    val: float, siunits: str, unitstr: bool = True, wrapin: Optional[str] = None
-) -> Union[float, tuple[float, str]]:
-    """make no conversion.
-    Used to put the correct units in place"""
-    # calculates the new value
-    # get conversion factor
-    #     if not siunits:
-    #         conv = 1
-    #     elif siunits not in SI:
-    #         conv = 1
-    #     elif not ipunits:
-    #         default = SI[siunits]["defaultkey"]
-    #         conv = SI[siunits][default]
-    #     else:
-    #         conv = SI[siunits][ipunits]
+def getsiunits(ipunit: str, ip: Optional[UnitDict] = None) -> set[str]:
+    """return all the si units avaliable for this ip unit
 
-    # do conversion
-    # new_val = doconversion(val, conv)
-    new_val = val
-
-    # make the unit string
-    ustr = ""
-    if unitstr:
-        if not siunits:
-            ustr = ""
-        else:
-            ustr = siunits
-
-        # wrap the unitstr
-        if not wrapin:
-            wrapin = "X"
-        elif ustr:
-            ustr = wrapin.replace("X", ustr)
-        else:
-            pass
-
-    # return the results
-    if unitstr:
-        return new_val, ustr
-    else:
-        return new_val
+    :param ipunit: ip unit
+    :param ip: Use this in case you want to override the default constant IP
+    :returns siunts: all the si units avaliable for this ip unit
+    """
+    if not ip:
+        ip = IP
+    dct = dict(ip[ipunit])
+    return set(dct.keys())
 
 
-def remove_defaultkey(a: UnitDict) -> UnitDict:
+def _remove_defaultkey(a: UnitDict) -> UnitDict:
     """for internal use"""
     return {k: {kk: a[k][kk] for kk in a[k] if kk != "defaultkey"} for k in a}
 
 
-def getdefaultkey(a: UnitDict) -> UnitDictVal:
-    """for internal use"""
+def _getdefaultkey(a: UnitDict) -> UnitDictVal:
+    """for internal use by getconversions"""
     return {k: a[k]["defaultkey"] for k in a}
 
 
-# functions needed:
-#
-# DONE
-# - convert2ip(val, siunits, ipunits=None, unitstr=True, wrapin='[]')
-# - convert2si(val, ipunits, siunits=None, unitstr=True, wrapin='[]')
-# - allsiunits()
-# - allipunits()
-# TODO
-# - getipunits(siunit)
-# - getsiunits(ipunit)
-# - getconversioncategories()
-# length, volume, u-value etc (make this manually using schema.epJSON)
-#
-# code to get the categories of the units
-# extract and hand edit
-# epj = read an epj file
-# dd = {}
-# for kkey in epj.epschema.epschemaobjects:
-#     o = epj.epschema.epschemaobjects[kkey]
-#     for key in o:
-#         if 'units' in o[key]:
-#             cat = o[key]['units']
-#             print(key, cat)
-#             dd.setdefault(cat, []).append(key)
-#
-# for key in dd:
-#     for item in dd[key]:
-#         print(f"{key},{item}")
+def defaultsiunit(ipunit: str) -> str:
+    """get the default `si unit` for the given `ip unit`
+
+    :param ipunit: ip unit
+    :returns siunit: the default `si unit` for the given `ip unit`
+    """
+    return IP_DEFAULT[ipunit]
+
+
+def defaultipunit(siunit: str) -> str:
+    """get the default `ip unit` for the given `si unit`
+
+    :param siunit: si unit
+    :returns ipunit: the default `ip unit` for the given `si unit`
+    """
+    return SI_DEFAULT[siunit]

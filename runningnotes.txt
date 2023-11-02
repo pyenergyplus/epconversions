@@ -1,3 +1,17 @@
+
+
+2023-10-31
+==========
+
+issue with type annotations and sphinx
+
+- https://stackoverflow.com/questions/40071573/how-to-make-sphinx-show-python-3-typing-type-hints-next-to-the-argument-descript
+- https://pypi.org/project/sphinx-autodoc-typehints/
+- https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+- https://github.com/tox-dev/sphinx-autodoc-typehints
+- https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
+
+
 2023-10-30
 ==========
 

@@ -12,7 +12,7 @@ from epconversions import epconversions
 
 
 @pytest.mark.parametrize(
-    "val, siunits, ipunits, unitstr, wrapin, expected",
+    "val, siunit, ipunit, unitstr, wrapin, expected",
     [
         # unitstr=False
         (
@@ -22,7 +22,7 @@ from epconversions import epconversions
             False,
             None,
             3 * 3.28083989501312,
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             "autocalculate",
             "m",
@@ -30,7 +30,7 @@ from epconversions import epconversions
             False,
             None,
             "autocalculate",
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             3,
             "m",
@@ -38,7 +38,7 @@ from epconversions import epconversions
             False,
             None,
             3 * 39.3700787401575,
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             3,
             None,
@@ -46,7 +46,7 @@ from epconversions import epconversions
             False,
             None,
             3,
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "deg",
@@ -54,7 +54,7 @@ from epconversions import epconversions
             False,
             None,
             30,
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "unknown",
@@ -62,7 +62,7 @@ from epconversions import epconversions
             False,
             None,
             30,
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "C",
@@ -70,7 +70,7 @@ from epconversions import epconversions
             False,
             None,
             30 * 1.8 + 32,
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         # unitstr=True
         (
             3,
@@ -79,7 +79,7 @@ from epconversions import epconversions
             True,
             None,
             (3 * 3.28083989501312, "ft"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             "autocalculate",
             "m",
@@ -87,7 +87,7 @@ from epconversions import epconversions
             True,
             None,
             ("autocalculate", "ft"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             3,
             "m",
@@ -95,7 +95,7 @@ from epconversions import epconversions
             True,
             None,
             (3 * 39.3700787401575, "in"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             3,
             None,
@@ -103,7 +103,7 @@ from epconversions import epconversions
             True,
             None,
             (3, ""),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "deg",
@@ -111,7 +111,7 @@ from epconversions import epconversions
             True,
             None,
             (30, "deg"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "unknown",
@@ -119,7 +119,7 @@ from epconversions import epconversions
             True,
             None,
             (30, "unknown"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         # unitstr=True, wrapin='[X]'
         (
             3,
@@ -128,7 +128,7 @@ from epconversions import epconversions
             True,
             "[X]",
             (3 * 3.28083989501312, "[ft]"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             "autocalculate",
             "m",
@@ -136,7 +136,7 @@ from epconversions import epconversions
             True,
             "[X]",
             ("autocalculate", "[ft]"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             3,
             "m",
@@ -144,7 +144,7 @@ from epconversions import epconversions
             True,
             "[X]",
             (3 * 39.3700787401575, "[in]"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             3,
             None,
@@ -152,7 +152,7 @@ from epconversions import epconversions
             True,
             "[X]",
             (3, ""),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "deg",
@@ -160,7 +160,7 @@ from epconversions import epconversions
             True,
             "[X]",
             (30, "[deg]"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "unknown",
@@ -168,7 +168,7 @@ from epconversions import epconversions
             True,
             None,
             (30, "unknown"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             30,
             "dimensionless",
@@ -176,16 +176,16 @@ from epconversions import epconversions
             True,
             None,
             (30, "dimensionless"),
-        ),  # val, siunits, ipunits, unitstr, wrapin, expected
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
     ],
 )
-def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
-    result = epconversions.convert2ip(val, siunits, ipunits, unitstr, wrapin)
+def test_convert2ip(val, siunit, ipunit, unitstr, wrapin, expected):
+    result = epconversions.convert2ip(val, siunit, ipunit, unitstr, wrapin)
     assert result == expected
 
 
 @pytest.mark.parametrize(
-    "val, ipunits, isunits, unitstr, wrapin, expected",
+    "val, ipunit, siunit, unitstr, wrapin, expected",
     [
         # unitstr=False
         (
@@ -195,7 +195,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             False,
             None,
             3 / 0.00793664091373665,
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             "autocalculate",
             "ft",
@@ -203,7 +203,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             False,
             None,
             "autocalculate",
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             3,
             "lb/MWh",
@@ -211,7 +211,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             False,
             None,
             3 / 7.93664091373665,
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             3,
             None,
@@ -219,7 +219,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             False,
             None,
             3,
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             30,
             "deg",
@@ -227,7 +227,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             False,
             None,
             30,
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             30,
             "unknown",
@@ -235,7 +235,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             False,
             None,
             30,
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             80,
             "F",
@@ -243,7 +243,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             False,
             None,
             (80 - 32) / 1.8,
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         # unitstr=True
         (
             3,
@@ -252,7 +252,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             True,
             None,
             (3 / 3.28083989501312, "m"),
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             "autocalculate",
             "ft",
@@ -260,7 +260,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             True,
             "[X]",
             ("autocalculate", "[m]"),
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             3,
             "lb/MWh",
@@ -268,7 +268,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             True,
             "[X]",
             (3 / 7.93664091373665, "[g/MJ]"),
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             3,
             None,
@@ -276,7 +276,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             True,
             "[X]",
             (3, ""),
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             30,
             "deg",
@@ -284,7 +284,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             True,
             "[X]",
             (30, "[deg]"),
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             30,
             "unknown",
@@ -292,7 +292,7 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             True,
             None,
             (30, "unknown"),
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             30,
             "dimensionless",
@@ -300,12 +300,12 @@ def test_convert2ip(val, siunits, ipunits, unitstr, wrapin, expected):
             True,
             None,
             (30, "dimensionless"),
-        ),  # val, ipunits, isunits, unitstr, wrapin, expected
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
     ],
 )
-def test_convert2si(val, ipunits, isunits, unitstr, wrapin, expected):
+def test_convert2si(val, ipunit, siunit, unitstr, wrapin, expected):
     """pytest for convert2si"""
-    result = epconversions.convert2si(val, ipunits, isunits, unitstr, wrapin)
+    result = epconversions.convert2si(val, ipunit, siunit, unitstr, wrapin)
     assert result == expected
 
 
@@ -623,159 +623,6 @@ def test_getipunits(siunits, expected):
 
 
 @pytest.mark.parametrize(
-    "val, siunits, unitstr, wrapin, expected",
-    [
-        # unitstr=False
-        (
-            3,
-            "m",
-            False,
-            None,
-            3,
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            "autocalculate",
-            "m",
-            False,
-            None,
-            "autocalculate",
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            3,
-            "m",
-            False,
-            None,
-            3,
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            3,
-            None,
-            False,
-            None,
-            3,
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "deg",
-            False,
-            None,
-            30,
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "unknown",
-            False,
-            None,
-            30,
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "C",
-            False,
-            None,
-            30,
-        ),  # val, siunits, unitstr, wrapin, expected
-        # unitstr=True
-        (
-            3,
-            "m",
-            True,
-            None,
-            (3, "m"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            "autocalculate",
-            "m",
-            True,
-            None,
-            ("autocalculate", "m"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            3,
-            "m",
-            True,
-            None,
-            (3, "m"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            3,
-            None,
-            True,
-            None,
-            (3, ""),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "deg",
-            True,
-            None,
-            (30, "deg"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "unknown",
-            True,
-            None,
-            (30, "unknown"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        # unitstr=True, wrapin='[X]'
-        (
-            3,
-            "m",
-            True,
-            "[X]",
-            (3, "[m]"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            "autocalculate",
-            "m",
-            True,
-            "[X]",
-            ("autocalculate", "[m]"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            3,
-            "m",
-            True,
-            "[X]",
-            (3, "[m]"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            3,
-            None,
-            True,
-            "[X]",
-            (3, ""),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "deg",
-            True,
-            "[X]",
-            (30, "[deg]"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "unknown",
-            True,
-            None,
-            (30, "unknown"),
-        ),  # val, siunits, unitstr, wrapin, expected
-        (
-            30,
-            "dimensionless",
-            True,
-            None,
-            (30, "dimensionless"),
-        ),  # val, siunits, unitstr, wrapin, expected
-    ],
-)
-def test_noconversion(val, siunits, unitstr, wrapin, expected):
-    result = epconversions.noconversion(val, siunits, unitstr, wrapin)
-    assert result == expected
-
-
-@pytest.mark.parametrize(
     "txt, expected",
     [
         (
@@ -899,4 +746,52 @@ def remove_defaultkey(withdefaultkey, expected):
 def getdefaultkey(withdefaultkey, expected):
     """pytest for getdefaultkey"""
     result = epconversions.getdefaultkey(withdefaultkey)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "siunit, si, expected",
+    [
+        ("C", None, {"F", "C"}),  # siunit, si, expected
+    ],
+)
+def test_getipunits(siunit, si, expected):
+    """pytest for getipunits"""
+    result = epconversions.getipunits(siunit, si)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "ipunit, ip, expected",
+    [
+        ("F", None, {"C"}),  # ipunit, ip, expected
+    ],
+)
+def test_getsiunits(ipunit, ip, expected):
+    """py.test for getsiunits"""
+    result = epconversions.getsiunits(ipunit, ip)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "ipunit, expected",
+    [
+        ("F", "C"),  # ipunit, expected
+    ],
+)
+def test_defaultsiunit(ipunit, expected):
+    """pytest for defaultsiunit"""
+    result = epconversions.defaultsiunit(ipunit)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "siunit, expected",
+    [
+        ("C", "F"),  # siunit, expected
+    ],
+)
+def test_defaultipunit(siunit, expected):
+    """pytest for defaultipunit"""
+    result = epconversions.defaultipunit(siunit)
     assert result == expected
