@@ -952,7 +952,7 @@ def doconversion(
     reverse: bool = False,
 ) -> float:
     """does the conversions
-    
+
     :param val: val is converted
     :param conv: this is the conversion factor or rule
     :param reverse: if True, use 1/conv or reverse of the rule
@@ -1050,5 +1050,3 @@ def defaultsiunit(ipunit: str) -> str:
 def defaultipunit(siunit: str) -> str:
     """get the default ipunit for the given siunit"""
     return SI_DEFAULT[siunit]
-
-
