@@ -1001,6 +1001,10 @@ def _doconversion(
     :param reverse: if True, use 1/conv or reverse of the rule
     :returns new_value: the converted value
     """
+    try:
+        val = float(val)
+    except (ValueError, TypeError) as e:
+        pass
     if reverse:
         try:
             conv = 1 / conv  # type: ignore

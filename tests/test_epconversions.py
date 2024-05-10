@@ -122,6 +122,14 @@ from epconversions import epconversions
         ),  # val, siunit, ipunit, unitstr, wrapin, expected
         # unitstr=True, wrapin='[X]'
         (
+            '3',
+            "m",
+            None,
+            True,
+            "[X]",
+            (3 * 3.28083989501312, "[ft]"),
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
+        (
             3,
             "m",
             None,
@@ -260,6 +268,14 @@ def test_convert2ip(val, siunit, ipunit, unitstr, wrapin, expected):
             True,
             "[X]",
             ("autocalculate", "[m]"),
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
+        (
+            '3',
+            "lb/MWh",
+            "g/MJ",
+            True,
+            "[X]",
+            (3 / 7.93664091373665, "[g/MJ]"),
         ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             3,
