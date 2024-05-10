@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Santosh Philip
+# Copyright (c) 2023-2024 Santosh Philip
 # =======================================================================
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1001,6 +1001,10 @@ def _doconversion(
     :param reverse: if True, use 1/conv or reverse of the rule
     :returns new_value: the converted value
     """
+    try:
+        val = float(val)
+    except (ValueError, TypeError) as e:
+        pass
     if reverse:
         try:
             conv = 1 / conv  # type: ignore

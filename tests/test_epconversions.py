@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Santosh Philip
+# Copyright (c) 2023-2024 Santosh Philip
 # =======================================================================
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -121,6 +121,14 @@ from epconversions import epconversions
             (30, "unknown"),
         ),  # val, siunit, ipunit, unitstr, wrapin, expected
         # unitstr=True, wrapin='[X]'
+        (
+            "3",
+            "m",
+            None,
+            True,
+            "[X]",
+            (3 * 3.28083989501312, "[ft]"),
+        ),  # val, siunit, ipunit, unitstr, wrapin, expected
         (
             3,
             "m",
@@ -260,6 +268,14 @@ def test_convert2ip(val, siunit, ipunit, unitstr, wrapin, expected):
             True,
             "[X]",
             ("autocalculate", "[m]"),
+        ),  # val, ipunit, siunit, unitstr, wrapin, expected
+        (
+            "3",
+            "lb/MWh",
+            "g/MJ",
+            True,
+            "[X]",
+            (3 / 7.93664091373665, "[g/MJ]"),
         ),  # val, ipunit, siunit, unitstr, wrapin, expected
         (
             3,
