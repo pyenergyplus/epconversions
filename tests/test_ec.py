@@ -8,6 +8,7 @@
 import pytest
 from epconversions import ec
 
+
 def almostequal(first, second, places=7, printit=True):
     """docstring for almostequal
     # taken from python's unit test
@@ -23,24 +24,23 @@ def almostequal(first, second, places=7, printit=True):
         return True
 
 
-
 @pytest.mark.parametrize(
     "fht, expected",
     [
-    (75, 23.8888888889), # fht, expected
-    ]
+        (75, 23.8888888889),  # fht, expected
+    ],
 )
 def test_f2c(fht, expected):
     result = ec.f2c(fht)
     assert almostequal(result, expected)
 
+
 @pytest.mark.parametrize(
     "cls, expected",
     [
-    (25, 77), # cls, expected
-    ]
+        (25, 77),  # cls, expected
+    ],
 )
 def test_c2f(cls, expected):
     result = ec.c2f(cls)
     assert result == expected
-
