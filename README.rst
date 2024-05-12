@@ -136,6 +136,19 @@ What are all the units it can convert?::
     # also try out ``allipunits()``
 
 
+This is all to complicated. Don't you have an easy way to convert from Fahrenheit to Celsius ?
+
+Yes! There is an easier way::
+
+    from epconversions import ec
+    c = ec.f2c(77)
+    print(c)
+    
+    >> 25.0
+
+That is as easy as it gets. Right now we have ``f2c`` and ``c2f``. If you want more easy functions, open an issue and add to them yourself.
+
+
 Thats all for now
 
 

@@ -4,6 +4,14 @@ epconversions package
 Submodules
 ----------
 
+epconversions.ec module
+-----------------------
+
+.. automodule:: epconversions.ec
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 epconversions.epconversions module
 ----------------------------------
 
