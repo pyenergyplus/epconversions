@@ -1,9 +1,8 @@
-=======
 History
 =======
 
-release 0.2.1
-=============
+release 0.2.2
+-------------
 
 
 2024-05-11
@@ -25,7 +24,7 @@ fixed issue #16
 :Solution: strings are converted to floats if possible
 
 
-release 0.1.0 (2023-10-28)
-==========================
+release 0.1.0
+-------------
 
 * First release on PyPI.
