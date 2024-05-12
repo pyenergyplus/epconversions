@@ -2,6 +2,18 @@
 History
 =======
 
+release 0.2.1
+=============
+
+
+2024-05-11
+----------
+
+fixed issue #19
+
+:Problem: easy functions needed like f2c and c2f
+:Solutions: added ec.f2c and ec.c2f
+
 
 
 2024-05-10
@@ -13,7 +25,7 @@ fixed issue #16
 :Solution: strings are converted to floats if possible
 
 
-0.1.0 (2023-10-28)
-------------------
+release 0.1.0 (2023-10-28)
+==========================
 
 * First release on PyPI.
