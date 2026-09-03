@@ -2,8 +2,19 @@
 History
 =======
 
+Releases
+~~~~~~~~
+
+Date:   Thu Sep 3 13:06:30 2026 -0700
+-------------------------------------
+
+fixed issue # 20
+
+:Problem: Need to shift to uv
+:Solution: Now on uv
+
 release 0.2.2
--------------
+~~~~~~~~~~~~~
 
 
 2024-05-11
@@ -26,6 +37,6 @@ fixed issue #16
 
 
 release 0.1.0
--------------
+~~~~~~~~~~~~~
 
 * First release on PyPI.
