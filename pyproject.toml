@@ -3,13 +3,13 @@ name = "epconversions"
 version = "0.2.2"
 description = "Unit conversions for E+"
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.10"
 dependencies = []
 
 [dependency-groups]
 dev = [
-    "coverage>=7.16.0",
-    "pytest>=9.1.1",
-    "sphinx-autodoc-typehints>=3.13.5",
+    "coverage>=7.10.7",
+    "pytest>=8.4.2",
+    "sphinx-autodoc-typehints>=2.3.0",
     "sphinxcontrib-napoleon>=0.7",
 ]
