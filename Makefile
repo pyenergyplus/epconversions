@@ -1,4 +1,4 @@
-.PHONY: clean clean-build clean-pyc clean-test coverage dist docs help install lint lint/flake8 lint/black
+'*.PHONY: clean clean-build clean-pyc clean-test coverage dist docs help install lint lint/flake8 lint/black
 .DEFAULT_GOAL := help
 
 define BROWSER_PYSCRIPT
@@ -47,23 +47,21 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
-lint/flake8: ## check style with flake8
-	flake8 epconversions tests
-lint/black: ## check style with black
-	black --check epconversions tests
+format:
+	uv run ruff format .
 
-lint: lint/flake8 lint/black ## check style
+lint: uv run ruff check .
 
 test: ## run tests quickly with the default Python
-	pytest
+	uv run pytest
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source epconversions -m pytest
-	coverage report -m
-	coverage html
+	uv run coverage run --source epconversions -m pytest
+	uv run coverage report -m
+	uv run coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
@@ -86,4 +84,4 @@ dist: clean ## builds source and wheel package
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	uv sync
