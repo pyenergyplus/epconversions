@@ -1,0 +1,15 @@
+[project]
+name = "epconversions"
+version = "0.2.2"
+description = "Unit conversions for E+"
+readme = "README.rst"
+requires-python = ">=3.9"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "coverage>=7.16.0",
+    "pytest>=9.1.1",
+    "sphinx-autodoc-typehints>=3.13.5",
+    "sphinxcontrib-napoleon>=0.7",
+]
